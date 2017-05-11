@@ -58,6 +58,7 @@ public class DownloadTask extends DefaultTask
 
             	//System.out.println("aac");
                 return hasCache(task);
+
             }
         });
     }
@@ -73,11 +74,11 @@ public class DownloadTask extends DefaultTask
 
     }
 
-    private static boolean hasCache(Task task){
+    private boolean hasCache(Task task){
 
     	AWExtension exe = getVersion(task);
 
-    	File versionFile = new File(binFile,VillagerGradlePlugin.DIR_AIWOLF_JAR_PREFIX+exe.getVersion());
+    	File versionFile = new File(binFile,this.getPreFix()+exe.getVersion());
 
     	return versionFile.exists();
 
@@ -110,7 +111,7 @@ public class DownloadTask extends DefaultTask
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
     	File outFile = new File(tmpFile,"aiwolf.zip");
 
-    	URL url =new URL(this.BASE_URL + exe.getVersion() +".zip");
+    	URL url =new URL(this.getBaseURL() + exe.getVersion() +".zip");
 
     	System.out.println(url);
 
@@ -153,6 +154,14 @@ public class DownloadTask extends DefaultTask
         });
 
 
+    }
+
+    protected String getBaseURL(){
+    	return this.BASE_URL;
+    }
+
+    protected String getPreFix(){
+    	return VillagerGradlePlugin.DIR_AIWOLF_JAR_PREFIX;
     }
 
 

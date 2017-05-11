@@ -1,6 +1,8 @@
 package awvillager.gradle;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
@@ -9,6 +11,11 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.DependencyResolutionListener;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ResolvableDependencies;
+import org.gradle.api.artifacts.repositories.ArtifactRepository;
+import org.gradle.api.internal.artifacts.dsl.DefaultRepositoryHandler;
+import org.gradle.api.internal.artifacts.repositories.DefaultBaseRepositoryFactory;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.javadoc.Javadoc;
 
 public class VillagerGradlePlugin implements Plugin<Project> {
 
@@ -17,11 +24,13 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 	static final String TASK_TEST = "testHoge";
 	static final String TASK_SET_UP_WORKSPACE = "setupWorkspace";
 	static final String TASK_DOWNLOAD_AIWOLF = "downloadAIWolf";
+	static final String TASK_DOWNLOAD_AIWOLF_DOC = "downloadAIWolfDoc";
 
 	//AIWolfをjarを管理するDir
 	static final String DIR_AIWOLF = "aw_bin";
 
 	static final String DIR_AIWOLF_JAR_PREFIX = "AIWolf-ver";
+	static final String DIR_AIWOLF_JAVADOC_PREFIX = "AIWolf-docs-ver";
 
 	private Project project;
 
@@ -41,10 +50,21 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 		makeTask(TASK_TEST, VillagerTestTask.class);
 
 		makeTask(TASK_DOWNLOAD_AIWOLF, DownloadTask.class);
+		//makeTask(TASK_DOWNLOAD_AIWOLF_DOC, DownloadDocTask.class);
 
 		makeTask(TASK_SET_UP_WORKSPACE, DefaultTask.class)
 		.dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF));
 
+
+		//ローカルにリポジトリを作成
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("name", "localRepo");
+		map.put("dirs", new File(this.project.getProjectDir(),"test"));
+
+		//Class class =DefaultBaseRepositoryFactory.class;
+		//DefaultBaseRepositoryFactory
+		//this.project.
+		//((DefaultRepositoryHandler)this.project.getRepositories()).flatDir(map);
 
 		//依存関係の解決
 		DependencySet compileDeps = project.getConfigurations().getByName("compile").getDependencies();
@@ -66,6 +86,9 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 					public
 				    void afterResolve(ResolvableDependencies resolvableDependencies) {}
 				});
+
+				//javadoc
+				//Javadoc javadoc = (Javadoc) project.getTasks().getByName(JavaPlugin.JAVADOC_TASK_NAME);
 
 	}
 
