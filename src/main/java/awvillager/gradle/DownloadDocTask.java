@@ -4,24 +4,38 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 import org.gradle.api.Action;
+import org.gradle.api.Task;
 import org.gradle.api.file.CopySpec;
 import org.gradle.api.tasks.bundling.Zip;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
+import awvillager.gradle.util.ZipUtil;
+
 public class DownloadDocTask extends DownloadTask{
 
 	//どこからダウンロードするか
     private String BASE_URL = "https://github.com/aiwolf/AIWolfCommon/archive/v";
 
+    protected boolean hasCache(Task task){
+
+    	AWExtension exe = getVersion(task);
+
+    	File versionFile = new File(binFile,exe.getVersion());
+    	File comon = new File(versionFile,"aiwolf_common-0.4.5-sources.jar");
+
+    	return comon.exists();
+
+    }
+
     protected void downloadAIWolf(AWExtension exe) throws IOException{
 
-    	return;
-    	/*
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
     	File outFile = new File(tmpFile,"aiwolf_sources_"+exe.getVersion()+".zip");
 
@@ -48,7 +62,7 @@ public class DownloadDocTask extends DownloadTask{
         }
 
         con.disconnect();
-        */
+
     }
 
     protected void copyAIWolf(AWExtension exe) throws IOException{
@@ -56,6 +70,9 @@ public class DownloadDocTask extends DownloadTask{
     	//とりあえずの場所に奥
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
     	File outFile = new File(tmpFile,"aiwolf_sources_"+exe.getVersion()+".zip");
+
+    	File repo = new File(getProject().getProjectDir(),VillagerGradlePlugin.DIR_AIWOLF+"/"+exe.getVersion());
+    	if(!repo.exists())repo.mkdirs();
 
     	File versionFile = tmpFile;//binFile;//new File(binFile);
 
@@ -67,26 +84,16 @@ public class DownloadDocTask extends DownloadTask{
             }
         });
 
-    	/*Zip zip = new Zip();
-    	zip.from(new File(versionFile,"AIWolfCommon-0.4.5/src"));
-    	zip.setArchiveName("test1.zip");*/
+    	//Zip化
+    	try {
+			ZipUtil.copyToZip(
+					new File(versionFile,"AIWolfCommon-0.4.5/src/org"),
+					new File(repo,"aiwolf_common-0.4.5-sources.jar"));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 
-
-    	/*
-    	getProject().copy(new Action<CopySpec>() {
-            @Override
-			public void execute(CopySpec copySpec) {
-            	copySpec.from(new File(versionFile,"AIWolf-ver"+exe.getVersion()));
-            	copySpec.into(new File(binFile,exe.getVersion()));
-
-            	//TODO 頭悪い方法. Hoge-Foo.jar -> Hoge_Foo-{version}.jarの正規表現ください
-            	copySpec.rename("aiwolf-common.jar", "aiwolf_common-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-client.jar", "aiwolf_client-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-server.jar", "aiwolf_server-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-viewer.jar", "aiwolf_viewer-"+exe.getVersion()+".jar");
-            }
-        });*/
 
 
     }

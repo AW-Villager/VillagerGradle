@@ -74,13 +74,14 @@ public class DownloadTask extends DefaultTask
 
     }
 
-    private boolean hasCache(Task task){
+    protected boolean hasCache(Task task){
 
     	AWExtension exe = getVersion(task);
 
     	File versionFile = new File(binFile,exe.getVersion());
+    	File commonFile = new File(versionFile,"aiwolf_common-"+exe.getVersion()+".jar");
 
-    	return versionFile.exists();
+    	return commonFile.exists();
 
     }
 
