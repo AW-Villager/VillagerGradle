@@ -78,7 +78,7 @@ public class DownloadTask extends DefaultTask
 
     	AWExtension exe = getVersion(task);
 
-    	File versionFile = new File(binFile,this.getPreFix()+exe.getVersion());
+    	File versionFile = new File(binFile,exe.getVersion());
 
     	return versionFile.exists();
 
@@ -106,10 +106,10 @@ public class DownloadTask extends DefaultTask
     	//System.out.println("test---" + exe.getVersion());
     }
 
-    private void downloadAIWolf(AWExtension exe) throws IOException{
+    protected void downloadAIWolf(AWExtension exe) throws IOException{
 
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf.zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+exe.getVersion()+".zip");
 
     	URL url =new URL(this.getBaseURL() + exe.getVersion() +".zip");
 
@@ -136,20 +136,33 @@ public class DownloadTask extends DefaultTask
         con.disconnect();
     }
 
-    private void copyAIWolf(AWExtension exe) throws IOException{
+    protected void copyAIWolf(AWExtension exe) throws IOException{
 
+    	//とりあえずの場所に奥
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf.zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+exe.getVersion()+".zip");
 
-    	File versionFile = binFile;//new File(binFile);
-
-    	String version = getVersion(this).getVersion();
+    	File versionFile = tmpFile;//binFile;//new File(binFile);
 
     	getProject().copy(new Action<CopySpec>() {
             @Override
 			public void execute(CopySpec copySpec) {
             	copySpec.from(getProject().zipTree(outFile));
             	copySpec.into(versionFile);
+            }
+        });
+
+    	getProject().copy(new Action<CopySpec>() {
+            @Override
+			public void execute(CopySpec copySpec) {
+            	copySpec.from(new File(versionFile,"AIWolf-ver"+exe.getVersion()));
+            	copySpec.into(new File(binFile,exe.getVersion()));
+
+            	//TODO 頭悪い方法. Hoge-Foo.jar -> Hoge_Foo-{version}.jarの正規表現ください
+            	copySpec.rename("aiwolf-common.jar", "aiwolf_common-"+exe.getVersion()+".jar");
+            	copySpec.rename("aiwolf-client.jar", "aiwolf_client-"+exe.getVersion()+".jar");
+            	copySpec.rename("aiwolf-server.jar", "aiwolf_server-"+exe.getVersion()+".jar");
+            	copySpec.rename("aiwolf-viewer.jar", "aiwolf_viewer-"+exe.getVersion()+".jar");
             }
         });
 
