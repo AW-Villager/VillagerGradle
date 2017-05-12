@@ -1,7 +1,9 @@
 package awvillager.gradle;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.gradle.api.DefaultTask;
@@ -34,6 +36,11 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 
 	private Project project;
 
+	//Plugin全体で使用するFileはここで管理
+
+	/** AIWolfのjarを入れているFile */
+	static File binFile;
+
 	@Override
 	public void apply(Project arg0) {
 
@@ -47,30 +54,15 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 
 		createAIWolfCache();
 
-
 		project.getExtensions().add(EXTENSIONS_AIWOLF, new AWExtension());
 
-		makeTask(TASK_TEST, VillagerTestTask.class);
+		makeTask(TASK_TEST,VillagerTestTask.class).<VillagerTestTask>setPlugin(this);
 
-		makeTask(TASK_DOWNLOAD_AIWOLF, DownloadTask.class);
-		makeTask(TASK_DOWNLOAD_AIWOLF_DOC, DownloadDocTask.class);
+		makeTask(TASK_DOWNLOAD_AIWOLF, DownloadTask.class).setPlugin(this);
+		makeTask(TASK_DOWNLOAD_AIWOLF_DOC, DownloadDocTask.class).setPlugin(this);
 
 		makeTask(TASK_SET_UP_WORKSPACE, DefaultTask.class)
 		.dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF));
-
-
-		/*
-		//ローカルにリポジトリを作成
-		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("name", "localRepo");
-		//map.put("dirs", new File(this.project.getProjectDir(),"test2"));
-		map.put("dirs", new File(this.project.getProjectDir(),"test2"));
-
-		//Class class =DefaultBaseRepositoryFactory.class;
-		//DefaultBaseRepositoryFactory
-		//this.project.
-		((DefaultRepositoryHandler)this.project.getRepositories()).flatDir(map);
-		*/
 
 		//依存関係の解決
 		DependencySet compileDeps = project.getConfigurations().getByName("compile").getDependencies();
@@ -90,15 +82,15 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 						((DefaultRepositoryHandler)project.getRepositories()).flatDir(map);
 
 				    	//String version = getVersion();
+						//TODO このあたりの管理を外部化したいね
 				        compileDeps.add(
-				        		/*project.getDependencies().add(
-				        				"compile", project.fileTree("aw_bin/"+DIR_AIWOLF_JAR_PREFIX+version)));"*/
-				        		//project.getDependencies().add(
-				        		//		"compile", project.fileTree(DIR_AIWOLF+"/"+version)));
-
-				        		project.getDependencies().add("compile",":aiwolf_common:0.4.5"));
-				        		//project.getDependencies().add(
-				        		//		"compile", project.getDependencies().create(":aiwolf_common:0.4.5")));
+				        		project.getDependencies().add("compile",":aiwolf_common:"+version));
+				        compileDeps.add(
+				        		project.getDependencies().add("compile",":aiwolf_client:"+version));
+				        compileDeps.add(
+				        		project.getDependencies().add("compile",":aiwolf_server:"+version));
+				        compileDeps.add(
+				        		project.getDependencies().add("compile",":aiwolf_viewer:"+version));
 
 				        project.getGradle().removeListener(this);
 				    }
@@ -113,9 +105,10 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 
 	}
 
+	/** キャッシュフォルダを作成 */
 	public void createAIWolfCache(){
 
-		File binFile = new File(this.project.getProjectDir(),VillagerGradlePlugin.DIR_AIWOLF);
+		binFile = new File(this.project.getProjectDir(),VillagerGradlePlugin.DIR_AIWOLF);
     	if(!binFile.exists())binFile.mkdirs();
 
 	}

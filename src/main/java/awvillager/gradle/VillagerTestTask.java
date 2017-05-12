@@ -17,7 +17,7 @@ import org.gradle.api.tasks.TaskAction;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
-public class VillagerTestTask extends DefaultTask{
+public class VillagerTestTask extends BaseTask{
 
 	public static final String     USER_AGENT       = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
 
