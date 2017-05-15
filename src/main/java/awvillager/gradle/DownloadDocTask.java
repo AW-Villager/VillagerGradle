@@ -57,9 +57,9 @@ public class DownloadDocTask extends DownloadTask{
     protected void downloadAIWolf(AWExtension exe,String baseURL) throws IOException{
 
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf_"+baseURL.toLowerCase()+"sources_"+exe.getVersion()+".zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+baseURL.toLowerCase()+"sources_"+exe.getAIWolfVersion()+".zip");
 
-    	URL url =new URL(BASE_URL1+baseURL +BASE_URL2+ exe.getVersion() +".zip");
+    	URL url =new URL(BASE_URL1+baseURL +BASE_URL2+ exe.getAIWolfVersion() +".zip");
 
     	System.out.println(url);
 
@@ -95,9 +95,9 @@ public class DownloadDocTask extends DownloadTask{
 
     	//とりあえずの場所に奥
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf_"+baseURL.toLowerCase()+"sources_"+exe.getVersion()+".zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+baseURL.toLowerCase()+"sources_"+exe.getAIWolfVersion()+".zip");
 
-    	File repo = new File(getProject().getProjectDir(),VillagerGradlePlugin.DIR_AIWOLF+"/"+exe.getVersion());
+    	File repo = new File(getProject().getProjectDir(),VillagerGradlePlugin.DIR_AIWOLF+"/"+exe.getAIWolfVersion());
     	if(!repo.exists())repo.mkdirs();
 
     	File versionFile = tmpFile;//binFile;//new File(binFile);
@@ -113,8 +113,8 @@ public class DownloadDocTask extends DownloadTask{
     	//Zip化
     	try {
 			ZipUtil.copyToZip(
-					new File(versionFile,"AIWolf"+baseURL+"-"+exe.getVersion()+"/src/org"),
-					new File(repo,"aiwolf_"+baseURL.toLowerCase()+"-"+exe.getVersion()+"-sources.jar"));
+					new File(versionFile,"AIWolf"+baseURL+"-"+exe.getAIWolfVersion()+"/src/org"),
+					new File(repo,"aiwolf_"+baseURL.toLowerCase()+"-"+exe.getAIWolfVersion()+"-sources.jar"));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

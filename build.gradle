@@ -30,7 +30,13 @@ compile 'com.google.guava:guava:21.0'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file://$buildDir/maven")
+        	if (project.hasProperty('mavenfolder')) {
+                repository(url: uri(project.mavenfolder))
+            }else{
+            	repository(url: "file://$buildDir/maven")
+                //repository(url: uri('/docs/maven'))
+            }
+
         }
     }
 }

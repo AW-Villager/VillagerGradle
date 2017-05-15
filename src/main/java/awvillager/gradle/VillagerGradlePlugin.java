@@ -92,6 +92,10 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 				        compileDeps.add(
 				        		project.getDependencies().add("compile",":aiwolf_viewer:"+version));
 
+				        //AIWolfが使用しているライブラリ
+				        compileDeps.add(
+				        		project.getDependencies().add("compile","net.arnx:jsonic:1.3.10"));
+
 				        project.getGradle().removeListener(this);
 				    }
 
@@ -133,7 +137,7 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 	public String getVersion(){
 		return
 				((AWExtension)this.project.getExtensions()
-				.findByName(VillagerGradlePlugin.EXTENSIONS_AIWOLF)).getVersion();
+				.findByName(VillagerGradlePlugin.EXTENSIONS_AIWOLF)).getAIWolfVersion();
 	}
 
 }

@@ -73,7 +73,7 @@ public class DownloadTask extends BaseTask
     	AWExtension exe = getVersion(task);
 
     	//File versionFile = new File(getBinFile(),exe.getVersion());
-    	File commonFile = new File(versionFile,"aiwolf_common-"+exe.getVersion()+".jar");
+    	File commonFile = new File(versionFile,"aiwolf_common-"+exe.getAIWolfVersion()+".jar");
 
     	return commonFile.exists();
 
@@ -111,7 +111,7 @@ public class DownloadTask extends BaseTask
 
     	AWExtension exe = this.getAWExtension();
 
-    	versionFile = new File(getBinFile(),exe.getVersion());
+    	versionFile = new File(getBinFile(),exe.getAIWolfVersion());
 
     	if(!versionFile.exists())versionFile.mkdirs();
 
@@ -128,9 +128,9 @@ public class DownloadTask extends BaseTask
     protected void downloadAIWolf(AWExtension exe) throws IOException{
 
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf_"+exe.getVersion()+".zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+exe.getAIWolfVersion()+".zip");
 
-    	URL url =new URL(this.getBaseURL() + exe.getVersion() +".zip");
+    	URL url =new URL(this.getBaseURL() + exe.getAIWolfVersion() +".zip");
 
     	System.out.println(url);
 
@@ -159,7 +159,7 @@ public class DownloadTask extends BaseTask
 
     	//とりあえずの場所に奥
     	File tmpFile = new File(getProject().getProjectDir(),"tmp");
-    	File outFile = new File(tmpFile,"aiwolf_"+exe.getVersion()+".zip");
+    	File outFile = new File(tmpFile,"aiwolf_"+exe.getAIWolfVersion()+".zip");
 
     	File versionFile = tmpFile;//binFile;//new File(binFile);
 
@@ -174,14 +174,14 @@ public class DownloadTask extends BaseTask
     	getProject().copy(new Action<CopySpec>() {
             @Override
 			public void execute(CopySpec copySpec) {
-            	copySpec.from(new File(versionFile,"AIWolf-ver"+exe.getVersion()));
-            	copySpec.into(new File(getBinFile(),exe.getVersion()));
+            	copySpec.from(new File(versionFile,"AIWolf-ver"+exe.getAIWolfVersion()));
+            	copySpec.into(new File(getBinFile(),exe.getAIWolfVersion()));
 
             	//TODO 頭悪い方法. Hoge-Foo.jar -> Hoge_Foo-{version}.jarの正規表現ください
-            	copySpec.rename("aiwolf-common.jar", "aiwolf_common-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-client.jar", "aiwolf_client-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-server.jar", "aiwolf_server-"+exe.getVersion()+".jar");
-            	copySpec.rename("aiwolf-viewer.jar", "aiwolf_viewer-"+exe.getVersion()+".jar");
+            	copySpec.rename("aiwolf-common.jar", "aiwolf_common-"+exe.getAIWolfVersion()+".jar");
+            	copySpec.rename("aiwolf-client.jar", "aiwolf_client-"+exe.getAIWolfVersion()+".jar");
+            	copySpec.rename("aiwolf-server.jar", "aiwolf_server-"+exe.getAIWolfVersion()+".jar");
+            	copySpec.rename("aiwolf-viewer.jar", "aiwolf_viewer-"+exe.getAIWolfVersion()+".jar");
             }
         });
 
