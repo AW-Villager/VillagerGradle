@@ -54,7 +54,9 @@ public class DownloadTask extends BaseTask
             @Override
             public boolean isSatisfiedBy(Task task) {
 
+
             	AWExtension exe = DownloadTask.getVersion(task);
+            	versionFile = new File(getBinFile(),exe.getAIWolfVersion());
             	//System.out.println("isSatisfiedBy---" + exe.getVersion());
 
             	//System.out.println("aac");

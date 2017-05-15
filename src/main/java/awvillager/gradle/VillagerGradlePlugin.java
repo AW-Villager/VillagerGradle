@@ -28,6 +28,9 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 	static final String TASK_DOWNLOAD_AIWOLF = "downloadAIWolf";
 	static final String TASK_DOWNLOAD_AIWOLF_DOC = "downloadAIWolfSources";
 
+	//vanilla
+	static final String TASK_START_SERVER = "startServer";
+
 	//AIWolfをjarを管理するDir
 	static final String DIR_AIWOLF = ".gradle/aiwolf";
 
@@ -56,13 +59,31 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 
 		project.getExtensions().add(EXTENSIONS_AIWOLF, new AWExtension());
 
-		makeTask(TASK_TEST,VillagerTestTask.class).<VillagerTestTask>setPlugin(this);
+		//makeTask(TASK_TEST,VillagerTestTask.class).<VillagerTestTask>setPlugin(this);
 
-		makeTask(TASK_DOWNLOAD_AIWOLF, DownloadTask.class).setPlugin(this);
-		makeTask(TASK_DOWNLOAD_AIWOLF_DOC, DownloadDocTask.class).setPlugin(this);
+		makeTask(TASK_DOWNLOAD_AIWOLF, DownloadTask.class)
+		.setPlugin(this);
 
-		makeTask(TASK_SET_UP_WORKSPACE, DefaultTask.class)
-		.dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF));
+		makeTask(TASK_DOWNLOAD_AIWOLF_DOC, DownloadDocTask.class)
+		.setPlugin(this);
+
+
+		makeTask(TASK_SET_UP_WORKSPACE)
+		.dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF))
+		.dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF_DOC))
+		.setDescription("Setup workspace.");
+
+		this.project.getTasks().getByName("assemble")
+		.dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
+
+		this.project.getTasks().getByName("compileJava")
+		.dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
+
+
+
+		//バニラ
+		//makeTask(TASK_START_SERVER, StartServerTask.class).setPlugin(this);
+
 
 		//依存関係の解決
 		DependencySet compileDeps = project.getConfigurations().getByName("compile").getDependencies();
