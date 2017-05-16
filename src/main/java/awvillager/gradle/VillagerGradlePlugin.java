@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -12,6 +13,7 @@ import org.gradle.api.UnknownTaskException;
 import org.gradle.api.artifacts.DependencyResolutionListener;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ResolvableDependencies;
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
 import org.gradle.api.internal.artifacts.dsl.DefaultRepositoryHandler;
 
 public class VillagerGradlePlugin implements Plugin<Project> {
@@ -102,8 +104,22 @@ public class VillagerGradlePlugin implements Plugin<Project> {
                 compileDeps.add(project.getDependencies().add("compile", "net.arnx:jsonic:1.3.10"));
 
                 // 村人
+
+                ((DefaultRepositoryHandler) project.getRepositories()).maven(new Action<MavenArtifactRepository>() {
+
+                    @Override
+                    public void execute(MavenArtifactRepository arg0) {
+                        arg0.setName("AW-Villager");
+                        arg0.setUrl("https://aitech.ac.jp/maslab/~k14048kk/maven");
+                    }
+
+                });
+
+                // 村人
                 if (project.findProperty("archivesBaseName") != "awvillager") {
 
+                    compileDeps.add(project.getDependencies().add("compile",
+                            "awvillager:awvillager:0.1.0"));
                     // TODO awvillagerの依存関係
 
                 }
