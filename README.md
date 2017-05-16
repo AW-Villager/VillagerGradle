@@ -31,6 +31,7 @@ build.gradleにプラグインの設定を書き込みます。
 
 ```groovy
 aiwolf {
+    //  {awversion}-{villagerversion}
     version = '0.4.5-0.0.1';
 }
 ```
