@@ -97,6 +97,13 @@ public class VillagerGradlePlugin implements Plugin<Project> {
                 // AIWolfが使用しているライブラリ
                 compileDeps.add(project.getDependencies().add("compile", "net.arnx:jsonic:1.3.10"));
 
+                // 村人
+                if (project.findProperty("archivesBaseName") != "awvillager") {
+
+                    // TODO awvillagerの依存関係
+
+                }
+
                 project.getGradle().removeListener(this);
             }
 
