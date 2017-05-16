@@ -8,6 +8,7 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.UnknownTaskException;
 import org.gradle.api.artifacts.DependencyResolutionListener;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ResolvableDependencies;
@@ -64,10 +65,13 @@ public class VillagerGradlePlugin implements Plugin<Project> {
         makeTask(TASK_SET_UP_WORKSPACE).dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF))
                 .dependsOn(this.project.getTasks().getByName(TASK_DOWNLOAD_AIWOLF_DOC)).setDescription("Setup workspace.");
 
-        this.project.getTasks().getByName("assemble").dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
-
-        this.project.getTasks().getByName("compileJava").dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
-
+        // Java用
+        try {
+            this.project.getTasks().getByName("assemble").dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
+            this.project.getTasks().getByName("compileJava").dependsOn(this.project.getTasks().getByName(TASK_SET_UP_WORKSPACE));
+        } catch (UnknownTaskException e) {
+            // TODO: handle exception
+        }
         // バニラ
         // makeTask(TASK_START_SERVER, StartServerTask.class).setPlugin(this);
 
