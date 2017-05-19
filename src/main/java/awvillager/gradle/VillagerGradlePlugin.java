@@ -118,8 +118,10 @@ public class VillagerGradlePlugin implements Plugin<Project> {
                 // 村人
                 if (project.findProperty("archivesBaseName") != "awvillager") {
 
+                    String vversion = getVillagerVersion();
+
                     compileDeps.add(project.getDependencies().add("compile",
-                            "awvillager:awvillager:0.1.0"));
+                            "awvillager:awvillager:" + vversion));
                     // TODO awvillagerの依存関係
 
                 }
@@ -165,6 +167,10 @@ public class VillagerGradlePlugin implements Plugin<Project> {
 
     public String getVersion() {
         return ((AWExtension) this.project.getExtensions().findByName(VillagerGradlePlugin.EXTENSIONS_AIWOLF)).getAIWolfVersion();
+    }
+
+    public String getVillagerVersion() {
+        return ((AWExtension) this.project.getExtensions().findByName(VillagerGradlePlugin.EXTENSIONS_AIWOLF)).getVillagerVersion();
     }
 
 }
