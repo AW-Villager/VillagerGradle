@@ -12,7 +12,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url uri('https://aitech.ac.jp/maslab/~k14048kk/maven')
+            url uri('https://maslab.aitech.ac.jp/~k14048kk/maven')
         }
     }
     dependencies {
@@ -33,8 +33,8 @@ build.gradleにプラグインの設定を書き込みます。
 
 ```groovy
 aiwolf {
-    //  {awversion}-{villagerversion}
-    version = '0.4.5-0.0.1';
+    //  {awversion}_{villagerversion}
+    version = '0.4.5_0.0.1';
 }
 ```
 
